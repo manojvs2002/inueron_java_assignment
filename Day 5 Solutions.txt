@@ -1,0 +1,225 @@
+Day 5 Solutions
+
+1.
+Convert 1D Array Into 2D Array
+
+You are given a **0-indexed** 1-dimensional (1D) integer array original, and two integers, m and n. You are tasked with creating a 2-dimensional (2D) array with  m rows and n columns using **all** the elements from original.
+
+The elements from indices 0 to n - 1 (**inclusive**) of original should form the first row of the constructed 2D array, the elements from indices n to 2 * n - 1 (**inclusive**) should form the second row of the constructed 2D array, and so on.
+
+Return *an* m x n *2D array constructed according to the above procedure, or an empty 2D array if it is impossible*.
+
+
+class Solution {
+    public int[][] construct2DArray(int[] original, int m, int n) {
+        int [][]res=new int[m][n];
+        int[][] empty={};
+      //  System.out.println(original.length);
+        if(original.length!=m*n){
+            return empty;
+        }
+
+        int k=0;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                res[i][j]=original[k++];
+            }
+        }
+        return res;
+        
+    }
+}
+
+
+
+2.You have n coins and you want to build a staircase with these coins. The staircase consists of k rows where the ith row has exactly i coins. The last row of the staircase **may be** incomplete.
+
+Given the integer n, return *the number of **complete rows** of the staircase you will build*.
+
+class Solution {
+    public int arrangeCoins(int n) {
+       int k = 0; // Number of complete rows
+        while (n >= k + 1) {
+            n -= k + 1;
+            k++;
+        }
+        return k;
+    }
+}
+
+Question 3
+
+Given an integer array nums sorted in **non-decreasing** order, return *an array of **the squares of each number** sorted in non-decreasing order*.
+
+class Solution {
+    public int[] sortedSquares(int[] a) {
+        int n=a.length;
+
+        for(int i=0;i<n;i++){
+            a[i]*=a[i];
+            
+        }
+        Arrays.sort(a);
+        return a;
+}
+}
+
+<aside>
+💡 **Question 4**
+
+Given two **0-indexed** integer arrays nums1 and nums2, return *a list* answer *of size* 2 *where:*
+
+- answer[0] *is a list of all **distinct** integers in* nums1 *which are **not** present in* nums2*.*
+- answer[1] *is a list of all **distinct** integers in* nums2 *which are **not** present in* nums1.
+
+**Note** that the integers in the lists may be returned in **any** order.
+
+</aside>
+
+class Solution {
+    public List<List<Integer>> findDifference(int[] nums1, int[] nums2) {
+
+        List<List<Integer>> answer = new ArrayList<>();;
+        Set<Integer> set1=new HashSet<>();
+        Set<Integer> set2=new HashSet<>();
+
+        for(int i =0;i<nums1.length;i++){
+            set1.add(nums1[i]);
+        }
+        for(int i =0;i<nums2.length;i++){
+            set2.add(nums2[i]);
+        }
+
+        Set<Integer> answer1=new HashSet<>();
+        Set<Integer> answer2=new HashSet<>();
+
+        for(int i=0;i<nums2.length;i++){
+            if(!set1.contains(nums2[i])){
+                answer1.add(nums2[i]);
+            }
+        }
+        for(int i=0;i<nums1.length;i++){
+            if(!set2.contains(nums1[i])){
+                answer2.add(nums1[i]);
+            }
+        }
+
+        List<Integer> list1=new ArrayList<>(answer2);
+        List<Integer> list2=new ArrayList<>(answer1);
+
+        answer.add(list1);
+        answer.add(list2);
+
+        return answer;
+        
+    }
+}
+
+
+5.Given two integer arrays arr1 and arr2, and the integer d, *return the distance value between the two arrays*.
+
+The distance value is defined as the number of elements arr1[i] such that there is not any element arr2[j] where |arr1[i]-arr2[j]| <= d.
+
+
+class Solution {
+    public int findTheDistanceValue(int[] arr1, int[] arr2, int d) {
+
+        int distance =0;
+
+        for(int i=0;i<arr1.length;i++){
+            boolean flag=false;
+
+            for(int j=0;j<arr2.length;j++){
+                if(Math.abs(arr1[i]-arr2[j])<=d){
+                    flag=true;
+                    break;
+                }
+            }
+            if(!flag){
+                distance++;
+            }
+        }
+        return distance;
+
+
+        
+    }
+}
+
+Given an integer array nums of length n where all the integers of nums are in the range [1, n] and each integer appears **once** or **twice**, return *an array of all the integers that appears **twice***.
+
+You must write an algorithm that runs in O(n) time and uses only constant extra space.
+
+class Solution {
+    public List<Integer> findDuplicates(int[] nums) {
+         List<Integer> duplicates = new ArrayList<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            int index = Math.abs(nums[i]) - 1;
+            if (nums[index] < 0) {
+                duplicates.add(Math.abs(nums[i]));
+            } else {
+                nums[index] = -nums[index];
+            }
+        }
+
+        return duplicates;
+    }
+}
+
+Suppose an array of length n sorted in ascending order is **rotated** between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:
+
+- [4,5,6,7,0,1,2] if it was rotated 4 times.
+- [0,1,2,4,5,6,7] if it was rotated 7 times.
+
+Notice that **rotating** an array [a[0], a[1], a[2], ..., a[n-1]] 1 time results in the array [a[n-1], a[0], a[1], a[2], ..., a[n-2]].
+
+Given the sorted rotated array nums of **unique** elements, return *the minimum element of this array*.
+
+You must write an algorithm that runs in O(log n) time.
+
+class Solution {
+    public int findMin(int[] a) {
+
+        // Arrays.sort(nums);
+        // return nums[0];
+
+        int left=0,right=a.length-1;
+
+        while(left<right){
+          int  mid=left+(right-left)/2;
+
+            if(a[mid]>a[right])
+                left=mid+1;
+            else
+                right=mid;
+
+        }
+        return a[left];
+        
+    }
+}
+
+<aside>
+💡 **Question 8**
+
+An integer array original is transformed into a **doubled** array changed by appending **twice the value** of every element in original, and then randomly **shuffling** the resulting array.
+
+Given an array changed, return original *if* changed *is a **doubled** array. If* changed *is not a **doubled** array, return an empty array. The elements in* original *may be returned in **any** order*.
+
+</aside>
+int n = changed.length, i = 0;
+        if (n % 2 == 1) return new int[0];
+        int[] res = new int[n / 2];
+        Map<Integer, Integer> count = new TreeMap<>();
+        for (int a : changed)
+            count.put(a, count.getOrDefault(a, 0) + 1);
+        for (int x : count.keySet()) {
+            if (count.get(x) > count.getOrDefault(x + x, 0))
+                return new int[0];
+            for (int j = 0; j < count.get(x); ++j) {
+                res[i++] = x;
+                count.put(x + x, count.get(x + x) - 1);
+            }
+        }
+        return res;
